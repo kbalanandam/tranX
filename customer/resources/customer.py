@@ -25,7 +25,7 @@ class CustomerApi(Resource):
                            ,customertype=_customer['customertype'], createdby=CustomerApi.__name__
                            ,updatedby=CustomerApi.__name__)
             new.save_to_db()
-            return {'messageType': 'Success', "message": "user, is created successfully."}
+            return {'messageType': 'Success', "message": "customer id: {}, is created successfully.".format(new.customerId)}
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500
 
