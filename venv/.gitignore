@@ -1,4 +1,4 @@
 # created by virtualenv automatically
-../customer/customer.db
+../customer/*.db
 ../customer/test.py
 ../customer/testDate.sql

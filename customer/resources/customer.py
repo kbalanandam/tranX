@@ -1,5 +1,7 @@
 from flask_restful import Resource, reqparse
 from customer.models.customer import Customer
+from customer.models.customerPhones import CustomerPhones
+from customer.models.customerEmails import CustomerEmails
 
 
 class CustomerApi(Resource):
@@ -18,16 +20,18 @@ class CustomerApi(Resource):
         parser.add_argument('gender', type=str, required=True, help="This field cannot be left blank!")
         parser.add_argument('dob', type=str, required=False)
         parser.add_argument('customertype', type=str, required=True)
+        parser.add_argument('email', type=str, required=True)
 
         try:
             _customer = parser.parse_args()
-            new = Customer(firstname=_customer['fname'], middlename=_customer['mname'], lastname=_customer['lname'], gender=_customer['gender']
-                           ,customertype=_customer['customertype'], createdby=CustomerApi.__name__
-                           ,updatedby=CustomerApi.__name__)
+            new = Customer(firstname=_customer['fname'], middlename=_customer['mname'], lastname=_customer['lname'], gender=_customer['gender'],
+                           customertype=_customer['customertype'], createdby=CustomerApi.__name__,
+                           updatedby=CustomerApi.__name__)
             new.save_to_db()
+            new_phone = CustomerEmails(customerid=new.customerId, email=_customer['email'], createdby=CustomerApi.__name__,
+                           updatedby=CustomerApi.__name__)
+            new_phone.save_to_db()
             return {'messageType': 'Success', "message": "customer id: {}, is created successfully.".format(new.customerId)}
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500
-
-
 
