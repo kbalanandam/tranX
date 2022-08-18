@@ -1,6 +1,8 @@
 from datetime import datetime
 from customer.db import db
 from customer.models.customerEmails import CustomerEmails
+from customer.models.customerPhones import CustomerPhones
+
 
 class Customer(db.Model):
 
@@ -35,15 +37,16 @@ class Customer(db.Model):
 
     def json(self):
 
-        _customerid = self.customerId
-        _email = CustomerEmails.find_by_id(_customerid)
+        _email = CustomerEmails.find_by_customerid(self.customerId)
+        _phones = CustomerPhones.find_by_customerid(self.customerId)
 
-        return {'CustomerId': self.customerId,
+        return {'customerId': self.customerId,
                 'firstName': self.FirstName,
                 'lastName': self.LastName,
                 'accountBalance': self.CustomerBalance,
                 'createdOn': str(self.StartEffectiveDate),
-                'email': _email.Email}
+                'email': _email.Email,
+                'phone': _phones}
 
     @classmethod
     def find_by_id(cls, customerid):

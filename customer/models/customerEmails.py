@@ -29,7 +29,7 @@ class CustomerEmails(db.Model):
                 'email': self.Email}
 
     @classmethod
-    def find_by_id(cls, customerid):
+    def find_by_customerid(cls, customerid):
         return cls.query.filter_by(CustomerId=customerid).first()
 
     def delete_from_db(self):
