@@ -2,6 +2,7 @@ from datetime import datetime
 from customer.db import db
 from customer.models.customerEmails import CustomerEmails
 from customer.models.customerPhones import CustomerPhones
+from customer.models.customerAddress import CustomerAddress
 
 
 class Customer(db.Model):
@@ -39,6 +40,7 @@ class Customer(db.Model):
 
         _email = CustomerEmails.find_by_customerid(self.customerId)
         _phones = CustomerPhones.find_by_customerid(self.customerId)
+        _address = CustomerAddress.find_by_customerid(self.customerId)
 
         return {'customerId': self.customerId,
                 'firstName': self.FirstName,
@@ -46,7 +48,8 @@ class Customer(db.Model):
                 'accountBalance': self.CustomerBalance,
                 'createdOn': str(self.StartEffectiveDate),
                 'email': _email.Email,
-                'phone': _phones}
+                'phone': _phones,
+                'address': _address}
 
     @classmethod
     def find_by_id(cls, customerid):

@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse, request
 from customer.models.customer import Customer
 from customer.models.customerPhones import CustomerPhones
 from customer.models.customerEmails import CustomerEmails
+from customer.models.customerAddress import CustomerAddress
 
 
 class CustomerApi(Resource):
@@ -24,6 +25,7 @@ class CustomerApi(Resource):
         parser.add_argument('customertype', type=str, required=True)
         parser.add_argument('email', type=str, required=True)
         parser.add_argument('phone', type=str, required=True)
+        parser.add_argument('address', type=str, required=True)
 
         try:
             phones = []
@@ -31,6 +33,11 @@ class CustomerApi(Resource):
             if payload['phone']:
                 for phone in payload['phone']:
                     phones.append(phone)
+
+            address = []
+            if payload['address']:
+                for adr in payload['address']:
+                    address.append(adr)
 
             _customer = parser.parse_args()
             new = Customer(firstname=_customer['fname'], middlename=_customer['mname'], lastname=_customer['lname'], gender=_customer['gender'],
@@ -45,6 +52,12 @@ class CustomerApi(Resource):
                            updatedby=CustomerApi.__name__)
 
                 new_phone.save_to_db()
+
+            for a in address:
+                new_address = CustomerAddress(customerid=new.customerId, addresstype=a['type'], address1=a['address1'], address2=a['address2'], ccode=a['countrycode'], scode=a['statecode'], pcode=a['postalcode'],createdby=CustomerApi.__name__,
+                           updatedby=CustomerApi.__name__)
+
+                new_address.save_to_db()
 
             return {'messageType': 'Success', "message": "customer id: {}, is created successfully.".format(new.customerId)}
         except Exception as e:
