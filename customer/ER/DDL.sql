@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `customer`.`Customer` (
   `CreatedBy` VARCHAR(45) NULL,
   `UpdatedDate` DATETIME NULL,
   `UpdatedBy` VARCHAR(45) NULL,
-  PRIMARY KEY (`CustomerId`, `CustomerTypeId`),
+  PRIMARY KEY (`CustomerId`),
   INDEX `fk_Customer_CustomerType1_idx` (`CustomerTypeId` ASC) VISIBLE,
   CONSTRAINT `fk_Customer_CustomerType1`
     FOREIGN KEY (`CustomerTypeId`)
@@ -289,17 +289,17 @@ CREATE TABLE IF NOT EXISTS `customer`.`TollRates` (
   `LaneId` INT NOT NULL,
   `TagRate` DECIMAL NULL,
   `PlateRate` DECIMAL NULL,
-  EffectiveStartDate DATETIME NULL,
-  EffectiveEndDate DATETIME NULL,
-  CreatedDate DATETIME NULL,
-  CreatedBy VARCHAR(45) NULL,
-  UpdatedDate DATETIME NULL,
-  UpdatedBy VARCHAR(45) NULL,
-  PRIMARY KEY (TollRateId, LaneId),
-  INDEX fk_TollRates_Lanes1_idx (LaneId ASC) VISIBLE,
-  CONSTRAINT fk_TollRates_Lanes1
-    FOREIGN KEY (LaneId)
-    REFERENCES customer.Lanes (LaneId)
+  `EffectiveStartDate` DATETIME NULL,
+  `EffectiveEndDate` DATETIME NULL,
+  `CreatedDate` DATETIME NULL,
+  `CreatedBy` VARCHAR(45) NULL,
+  `UpdatedDate` DATETIME NULL,
+  `UpdatedBy` VARCHAR(45) NULL,
+  PRIMARY KEY (`TollRateId`, `LaneId`),
+  INDEX `fk_TollRates_Lanes1_idx` (`LaneId` ASC) VISIBLE,
+  CONSTRAINT `fk_TollRates_Lanes1`
+    FOREIGN KEY (`LaneId`)
+    REFERENCES `customer`.`Lanes` (`LaneId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
