@@ -33,11 +33,10 @@ class CustomerPhones(db.Model):
 
     @classmethod
     def find_by_customerid(cls, customerid):
-        phones=[]
+        phones = []
         for p in cls.query.filter_by(CustomerId=customerid).all():
-            phones.append({'type': p.PhoneType, 'ccode': p.CountryCode, 'phone':p.PhoneNumber})
+            phones.append({'type': p.PhoneType, 'ccode': p.CountryCode, 'phone': p.PhoneNumber})
         return phones
-
 
     def delete_from_db(self):
         db.session.delete(self)
