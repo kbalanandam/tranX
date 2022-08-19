@@ -40,7 +40,12 @@ class CustomerAddress(db.Model):
     def find_by_customerid(cls, customerid):
         address = []
         for a in cls.query.filter_by(CustomerId=customerid).all():
-            address.append({'type': a.AddressType, 'address1': a.Address1, 'address2': a.Address2, 'countyCode': a.CountryCode, 'postalCode': a.PostalCode, 'stateCode': a.StateCode})
+            address.append({'type': a.AddressType,
+                            'address1': a.Address1,
+                            'address2': a.Address2,
+                            'countyCode': a.CountryCode,
+                            'postalCode': a.PostalCode,
+                            'stateCode': a.StateCode})
         return address
 
     def delete_from_db(self):
