@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from customer.db import db
 
 
@@ -6,13 +6,14 @@ class CustomerPhones(db.Model):
 
     __tablename__ = 'CustomerPhones'
 
-    def __init__(self, customerid, ccode, phoneno, phonetype, createdby=None, updatedby=None):
+    def __init__(self, customerid, ccode, phoneno, phonetype, enddate=None, createdby=None, updatedby=None):
         self.CustomerId = customerid
         self.CountryCode = ccode
         self.PhoneNumber = phoneno
         self.PhoneType = phonetype
         self.CreatedBy = createdby
         self.UpdatedBy = updatedby
+        self.EndEffectiveDate = enddate
 
     PhoneId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     CustomerId = db.Column(db.Integer)
