@@ -35,7 +35,7 @@ class CustomerPhones(db.Model):
     @classmethod
     def find_by_customerid(cls, customerid):
         phones = []
-        for p in cls.query.filter_by(CustomerId=customerid).all():
+        for p in cls.query.filter(CustomerPhones.CustomerId == customerid, CustomerPhones.EndEffectiveDate > datetime.now()).all():
             phones.append({'type': p.PhoneType, 'ccode': p.CountryCode, 'phone': p.PhoneNumber})
         return phones
 
