@@ -39,6 +39,12 @@ class CustomerPhones(db.Model):
             phones.append({'type': p.PhoneType, 'ccode': p.CountryCode, 'phone': p.PhoneNumber})
         return phones
 
+    @classmethod
+    def find_by_customerptype(cls, customerid, phonetype):
+        return cls.query.filter(CustomerPhones.CustomerId == customerid,
+                                    CustomerPhones.PhoneType == phonetype,
+                                  CustomerPhones.EndEffectiveDate > datetime.now()).one()
+
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
@@ -46,6 +52,7 @@ class CustomerPhones(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
 
 
 
