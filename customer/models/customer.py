@@ -54,6 +54,7 @@ class Customer(db.Model):
 
     @classmethod
     def find_by_id(cls, customerid):
+
         return cls.query.filter_by(customerId=customerid).first()
 
     def delete_from_db(self):

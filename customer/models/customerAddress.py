@@ -46,7 +46,10 @@ class CustomerAddress(db.Model):
                             'countyCode': a.CountryCode,
                             'postalCode': a.PostalCode,
                             'stateCode': a.StateCode})
-        return address
+        if len(address) == 0:
+            return None
+        else:
+            return address
 
     def delete_from_db(self):
         db.session.delete(self)

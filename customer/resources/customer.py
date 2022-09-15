@@ -8,10 +8,15 @@ from customer.models.customerAddress import CustomerAddress
 class CustomerApi(Resource):
 
     def get(self, customerid):
+        try:
+            _customer = Customer.find_by_id(customerid)
+            if _customer is not None:
+                return _customer.json()
+            else:
+                return {'messageType': 'Warning', 'message': str('customer not exists.')}, 404
 
-        _customer = Customer.find_by_id(customerid)
-        if _customer:
-            return _customer.json()
+        except Exception as e:
+            return {'messageType': 'Error', 'message': str(e)}, 500
 
     def post(self):
 
