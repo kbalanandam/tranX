@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask import jsonify
 from customer.db import db
 from customer.models.customerEmails import CustomerEmails
 from customer.models.customerPhones import CustomerPhones
@@ -47,7 +48,7 @@ class Customer(db.Model):
                 'lastName': self.LastName,
                 'accountBalance': self.CustomerBalance,
                 'createdOn': str(self.StartEffectiveDate),
-                'email': _email.Email,
+                'email': _email,
                 'phone': _phones,
                 'address': _address}
 

@@ -30,8 +30,10 @@ class CustomerEmails(db.Model):
 
     @classmethod
     def find_by_customerid(cls, customerid):
-        return cls.query.filter(CustomerEmails.CustomerId == customerid,
-                                CustomerEmails.EndEffectiveDate > datetime.now()).one()
+        for e in cls.query.filter(CustomerEmails.CustomerId == customerid,
+                                CustomerEmails.EndEffectiveDate > datetime.now()).all():
+
+            return e.Email
 
     def delete_from_db(self):
         db.session.delete(self)
