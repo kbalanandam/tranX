@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from datetime import datetime
 from customer.models.customerPhones import CustomerPhones
+from customer.models.customer import Customer
 
 
 class CustomerPhonesApi(Resource):
@@ -16,7 +17,12 @@ class CustomerPhonesApi(Resource):
         try:
             payload = parser.parse_args()
 
-            return CustomerPhones.updatephone(payload)
+            _customer = Customer.find_by_id(payload['customerid'])
+            if _customer is not None:
+
+                return CustomerPhones.updatephone(payload)
+            else:
+                return {'messageType': 'Warning', 'message': 'customer not exists.'}, 404
 
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500
