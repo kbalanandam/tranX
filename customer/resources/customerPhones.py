@@ -16,33 +16,7 @@ class CustomerPhonesApi(Resource):
         try:
             payload = parser.parse_args()
 
-            _customerphones= CustomerPhones.find_by_customerptype(payload['customerid'],  payload['type'])
-            if _customerphones is not None:
-                if _customerphones.PhoneType == payload['type'] and _customerphones.PhoneNumber == payload['phoneno']:
-                    return {'messageType': 'Success', "message": "customer with same phone number already exists."}
-                elif _customerphones.PhoneType == payload['type'] and _customerphones.PhoneNumber != payload['phoneno']:
-
-                    _customerphones.EndEffectiveDate = datetime.now()
-                    _customerphones.UpdatedDate = datetime.now()
-                    _customerphones.UpdatedBy = CustomerPhonesApi.__name__
-                    _customerphones.save_to_db()
-                    new_phone = CustomerPhones(customerid=payload['customerid'],
-                                           phonetype=payload['type'],
-                                           ccode=payload['ccode'],
-                                           phoneno=payload['phoneno'],
-                                           createdby=CustomerPhonesApi.__name__,
-                                           updatedby=CustomerPhonesApi.__name__)
-                    new_phone.save_to_db()
-                    return {'messageType': 'Success', "message": "customer phone number is updated successfully."}
-            else:
-                    new_phone = CustomerPhones(customerid=payload['customerid'],
-                                           phonetype=payload['type'],
-                                           ccode=payload['ccode'],
-                                           phoneno=payload['phoneno'],
-                                           createdby=CustomerPhonesApi.__name__,
-                                           updatedby=CustomerPhonesApi.__name__)
-                    new_phone.save_to_db()
-                    return {'messageType': 'Success', "message": "customer phone number is updated successfully."}, 201
+            return CustomerPhones.updatephone(payload)
 
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500

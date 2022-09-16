@@ -43,11 +43,37 @@ class CustomerPhones(db.Model):
             return phones
 
     @classmethod
-    def find_by_customerptype(cls, customerid, phonetype):
+    def updatephone(cls, payload):
 
-        return cls.query.filter(CustomerPhones.CustomerId == customerid,
-                                    CustomerPhones.PhoneType == phonetype,
-                                  CustomerPhones.EndEffectiveDate > datetime.now()).first()
+        try:
+
+            exists = (cls.query.filter(CustomerPhones.CustomerId == payload['customerid'],
+                                CustomerPhones.PhoneNumber == payload['phoneno'],
+                                CustomerPhones.PhoneType == payload['type'],
+                                CustomerPhones.EndEffectiveDate > datetime.now()).first())
+            if exists is not None:
+                return {'messageType': 'Success', "message": "customer with same phone number already exists."}
+
+            else:
+                for _customerphones in cls.query.filter(CustomerPhones.CustomerId == payload['customerid'],
+                                CustomerPhones.PhoneNumber != payload['phoneno'],
+                                CustomerPhones.PhoneType == payload['type'],
+                                CustomerPhones.EndEffectiveDate > datetime.now()).all():
+                    _customerphones.EndEffectiveDate = datetime.now()
+                    _customerphones.UpdatedDate = datetime.now()
+                    _customerphones.UpdatedBy = CustomerPhones.__module__
+                    _customerphones.save_to_db()
+
+                new_phone = CustomerPhones(customerid=payload['customerid'],
+                                           phonetype=payload['type'],
+                                           ccode=payload['ccode'],
+                                           phoneno=payload['phoneno'],
+                                           createdby=CustomerPhones.__module__,
+                                           updatedby=CustomerPhones.__module__)
+                new_phone.save_to_db()
+                return {'messageType': 'Success', "message": "customer phone number is updated successfully."}, 201
+        except Exception as e:
+            return {'messageType': 'Error', 'message': str(e)}, 500
 
     def delete_from_db(self):
         db.session.delete(self)
