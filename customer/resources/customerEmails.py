@@ -15,8 +15,11 @@ class CustomerEmailsApi(Resource):
             payload = parser.parse_args()
             _customeremail= CustomerEmails.find_by_customerid(payload['customerid'])
 
-            if _customeremail.CustomerId == payload['customerid'] and _customeremail.Email == payload['email']:
-                return {'messageType': 'Success', "message": "customer with same email already exists."}
+            if _customeremail is not None:
+                for e in _customeremail:
+
+                    if _customeremail.CustomerId == payload['customerid'] and _customeremail.Email == payload['email']:
+                        return {'messageType': 'Success', "message": "customer with same email already exists."}
             elif _customeremail.CustomerId == payload['customerid'] and _customeremail.Email != payload['email']:
 
                 _customeremail.EndEffectiveDate = datetime.now()

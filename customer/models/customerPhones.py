@@ -44,9 +44,10 @@ class CustomerPhones(db.Model):
 
     @classmethod
     def find_by_customerptype(cls, customerid, phonetype):
+
         return cls.query.filter(CustomerPhones.CustomerId == customerid,
                                     CustomerPhones.PhoneType == phonetype,
-                                  CustomerPhones.EndEffectiveDate > datetime.now()).one()
+                                  CustomerPhones.EndEffectiveDate > datetime.now()).first()
 
     def delete_from_db(self):
         db.session.delete(self)

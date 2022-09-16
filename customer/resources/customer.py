@@ -13,7 +13,7 @@ class CustomerApi(Resource):
             if _customer is not None:
                 return _customer.json()
             else:
-                return {'messageType': 'Warning', 'message': str('customer not exists.')}, 404
+                return {'messageType': 'Warning', 'message': 'customer: {} not exists.'.format(customerid)}, 404
 
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500
