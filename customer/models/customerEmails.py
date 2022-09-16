@@ -39,6 +39,37 @@ class CustomerEmails(db.Model):
         else:
             return email
 
+    @classmethod
+    def updateemail(cls, payload):
+
+        try:
+            exists = (cls.query.filter(CustomerEmails.CustomerId == payload['customerid'],
+                                       CustomerEmails.Email == payload['email'],
+                                       CustomerEmails.EndEffectiveDate > datetime.now()).first())
+
+            if exists is not None:
+                return {'messageType': 'Success', "message": "customer with same email already exists."}
+            else:
+
+                for _customeremail in cls.query.filter(CustomerEmails.CustomerId == payload['customerid'],
+                                                       CustomerEmails.Email != payload['email'],
+                                                       CustomerEmails.EndEffectiveDate > datetime.now()).all():
+                    _customeremail.EndEffectiveDate = datetime.now()
+                    _customeremail.UpdatedDate = datetime.now()
+                    _customeremail.UpdatedBy = CustomerEmails.__module__
+                    _customeremail.save_to_db()
+
+                new_email = CustomerEmails(customerid=payload['customerid'],
+                                       email=payload['email'],
+                                       createdby=CustomerEmails.__module__,
+                                       updatedby=CustomerEmails.__module__)
+                new_email.save_to_db()
+
+                return {'messageType': 'Success', "message": "customer email is updated successfully."}, 201
+
+        except Exception as e:
+            return {'messageType': 'Error', 'message': str(e)}, 500
+
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
@@ -46,6 +77,4 @@ class CustomerEmails(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
-
-
 

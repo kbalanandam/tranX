@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
-from datetime import datetime
 from customer.models.customerEmails import CustomerEmails
+from customer.models.customer import Customer
 
 
 class CustomerEmailsApi(Resource):
@@ -13,35 +13,12 @@ class CustomerEmailsApi(Resource):
 
         try:
             payload = parser.parse_args()
-            _customeremail= CustomerEmails.find_by_customerid(payload['customerid'])
+            _customer = Customer.find_by_id(payload['customerid'])
+            if _customer is not None:
 
-            if _customeremail is not None:
-                for e in _customeremail:
-
-                    if _customeremail.CustomerId == payload['customerid'] and _customeremail.Email == payload['email']:
-                        return {'messageType': 'Success', "message": "customer with same email already exists."}
-            elif _customeremail.CustomerId == payload['customerid'] and _customeremail.Email != payload['email']:
-
-                _customeremail.EndEffectiveDate = datetime.now()
-                _customeremail.UpdatedDate = datetime.now()
-                _customeremail.UpdatedBy = CustomerEmailsApi.__name__
-                _customeremail.save_to_db()
-                new_email = CustomerEmails(customerid=payload['customerid'],
-                                           email=payload['email'],
-                                           createdby=CustomerEmailsApi.__name__,
-                                           updatedby=CustomerEmailsApi.__name__)
-                new_email.save_to_db()
-                return {'messageType': 'Success', "message": "customer email is updated successfully."}
+                return CustomerEmails.updateemail(payload)
             else:
-                _customeremail.EndEffectiveDate = datetime.now()
-                _customeremail.UpdatedDate = datetime.now()
-                _customeremail.UpdatedBy = CustomerEmailsApi.__name__
-                _customeremail.save_to_db()
-                new_email = CustomerEmails(customerid=payload['customerid'],
-                                           email=payload['email'],
-                                           createdby=CustomerEmailsApi.__name__,
-                                           updatedby=CustomerEmailsApi.__name__)
-                new_email.save_to_db()
-                return {'messageType': 'Success', "message": "customer email is updated successfully."}, 201
+                return {'messageType': 'Warning', 'message': 'customer not exists.'}, 404
+
         except Exception as e:
             return {'messageType': 'Error', 'message': str(e)}, 500
