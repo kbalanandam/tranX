@@ -10,7 +10,8 @@ from customer.resources.customerEmails import CustomerEmailsApi
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tranX'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customer.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customer.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/customer'
 api = Api(app)
 CORS(app)
 
